@@ -15,5 +15,5 @@
 |界面|更新界面时可能与debug不同 版本号显示不同|/|
 |建议|钻进未更改的漏洞或利用未修复的BUG来作弊|体验新功能 有时候也可以体验新BUG|
 # English version
-|[jump_1](https://translate.google.com)|[jump_2](https://translate.google.cn)|[jump_3](https://fanyi.baidu.com)|[jump_4](https://youdao.com)|
-|:-:|:-:|:-:|:-:|
+|[Google Translate](https://translate.google.com)|[Google Translate for China](https://translate.google.cn)|[Baidu Translate](https://fanyi.baidu.com)|[Youdao](https://youdao.com)|[Chrome](https://www.google.com/chrome/)|[Chrome for China](https://www.google.cn/chrome/)|
+|:-:|:-:|:-:|:-:|:-:|:-:|
