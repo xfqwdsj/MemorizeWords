@@ -4,9 +4,12 @@
 $(function() {
 
 	/*
+		版本 1.2.1.1 - fix 修复内容
+		- 修复了<input>标签使用</Button>标签闭合的低级问题
 		版本 1.2.1.1 更新内容
 		- 优化代码提升效率
 		- 优化布局
+		
 	*/
 
 	/*
@@ -14,7 +17,7 @@ $(function() {
 	*/
 	
 	var selected = "7b_u1"
-	var version = "1.2.1.1"  
+	var version = "1.2.1.1 - fix"  
 	var versionS = "debug"
 	var complete = false
 	var allcount
@@ -223,15 +226,14 @@ $(function() {
 		<span id="hint">
 		</span>
 		<br />
-		<input id="play" style="margin-left: 5px; border: none;" type="image" src="/images/play.png">
-		</Button>
+		<input id="play" style="margin-left: 5px; border: none;" type="image" src="/images/play.png" />
 	</div>
 	<div style="margin: auto; margin-bottom: 10px;">
 		<span id="notice" style="float: left" ></span>
 		<span id="result" style="float: right" ></span>
 	</div>
 	<br />
-	<input type="text" id="text" autocomplete="off" style="text-align: center;">
+	<input type="text" id="text" autocomplete="off" style="text-align: center;" />
 	<br />
 	<button type="button" id="help" style="margin-top: 5px; margin-right: 10px;"></button>
 	<button type="button" id="again" style="margin-top: 5px;"></button>
