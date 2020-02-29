@@ -8,7 +8,7 @@ $(function() {
 	*/
 	
 	var selected = "7b_u1"
-	var version = "1.2.1.2"  
+	var version = "1.2.2 - preview - 4"  
 	var versionS = "debug"
 	var complete = false
 	var allcount
@@ -23,6 +23,11 @@ $(function() {
 	var value_index
 	var words
 	var words_index
+	var time
+	var timer
+	var timeresultM
+	var timeresultS
+	var timeresult
 	
 	/*
 		定义变量 - 结束
@@ -33,7 +38,6 @@ $(function() {
 	memorize_words("7b_u1") 
 	$("#version").html(versionS + " " +version)  
 	version = undefined
-	$("#again").html("重默")
 	
 	/*
 		初始化 - 结束
@@ -43,6 +47,9 @@ $(function() {
 	
 	$("#unit").off("change").on("change", 
 	function() {
+		$("#hint").html("Loading...")
+		$("#help").html("Please")
+		$("#again").html("wait...")
 		selected = $(this).children('option:selected').val() 
 		memorize_words(selected)  
 	}) 
@@ -56,7 +63,22 @@ $(function() {
 			}
 			helpcount++
 		} else {
-			alert("共默写" + allcount + "个单词 共提示" + helpcount + "次")
+			if(timeresult == "获取失败") {
+				while(timecount >= 60) {
+					timecount = timecount - 60
+					timeresultM++
+				}
+				if(timecount < 10) {
+					timeresultS = "0" + timecount
+				} else if(timecount >= 10) {
+					timeresultS = timecount
+				} 
+				timeresult = timeresultM + ":" + timeresultS
+				timeresultM = 0
+				timeresultS = 0
+				timecount = 0
+			}
+			alert("共默写" + allcount + "个单词 共提示" + helpcount + "次 用时" + timeresult)
 		}
 	})
 	$("#play").off("click").on("click",
@@ -74,6 +96,7 @@ $(function() {
 		memorize_words(selected)
 	})
 	function memorize_words(units) {
+		clearInterval(timer)
 		words = new Array()
 		complete = false
 		correct = false
@@ -82,10 +105,15 @@ $(function() {
 		rightcount = 0
 		value_index = 0
 		words_index = 0
+		time = undefined
+		timer = undefined
+		timecount = 0
+		timeresultM = 0
+		timeresultS = 0
+		timeresult = "获取失败"
 		
 		//====================
 		
-		$("#help").html("提示") 
 		$("#notice").html("")
 		$("#text").val("")
 		
@@ -96,7 +124,7 @@ $(function() {
 			url: unit_xml,
 			dataType: 'xml',
 			type: 'GET',
-			timeout: 2000,
+			timeout: 5000,
 			success: function(data) {
 				$(data).find("item").each(function(index) {
 					name = $(this).find("word").html() 
@@ -118,6 +146,15 @@ $(function() {
 			}
 		}) 
 		unit_xml = undefined
+		$("#help").html("提示") 
+		$("#again").html("重默")
+		
+		//====================
+		
+		timer = setInterval(function(){
+			timecount++
+		},
+		1000)
 		
 		//====================
 		
@@ -150,17 +187,22 @@ $(function() {
 		$("#text").off("keydown").on("keydown",
 		function(e) {
 			if (e.keyCode == 13) {
+				time = undefined
+				clearTimeout(time)
+				$("#notice").html("")
 				if (correct == false) {
 					helpcount++
 					$("#notice").html("<font color='red'>请输入正确的单词：" + words[words_index].name + "</font>")
 					$("#text").val("")
-					setTimeout(function() {
+					time = setTimeout(function() {
 						$("#notice").html("")
+						time = undefined
 					},
 					1000)
 				} else {
 					setTimeout(function() {
 						if (++rightcount >= allcount) {
+							clearInterval(timer)
 							$("#text").val("") 
 							$("#result").html("") 
 							$("#notice").html("") 
@@ -239,8 +281,8 @@ $(function() {
 		<input id="play" style="margin-left: 5px; border: none;" type="image" src="/images/play.png" />
 	</div>
 	<div style="margin: auto; margin-bottom: 10px;">
-		<span id="notice" style="float: left"></span>
-		<span id="result" style="float: right"></span>
+		<span id="notice" style="float: left">就快好了！ ヾ(≧▽≦*)o</span>
+		<span id="result" style="float: right">0/0</span>
 	</div>
 	<br />
 	<input type="text" id="text" autocomplete="off" style="font-size: 20px; outline: none; text-align: center; height: 33px; width: 100%; border-bottom: 1px solid #dbdbdb; border-top:0px; border-left:0px; border-right:0px;" />
