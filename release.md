@@ -4,17 +4,11 @@
 $(function() {
 
 	/*
-		版本 1.2.1.1 更新内容
-		- 优化代码提升效率
-		- 优化布局
-	*/
-
-	/*
 		定义变量 - 开始
 	*/
 	
 	var selected = "7b_u1"
-	var version = "1.2.1.1"  
+	var version = "1.2.1.2"  
 	var versionS = "release"
 	var complete = false
 	var allcount
@@ -189,7 +183,27 @@ $(function() {
 	
 })
 </script>
-<div id="main" style="text-align: center;">
+<style type="text/css">
+	.bton {
+		padding:0.6rem 0.9rem;
+		font-size: 0.9rem;
+		color: rgba(0,0,0,0.7);
+		background-color: rgba(0,0,0,0.08);
+		outline:none;
+		border-color: rgba(0,0,0,0.2);
+		border-style: solid;
+		border-width: 1px;
+		border-radius: 0.3rem;
+		transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+	}
+	.bton:hover {
+		color: rgba(0,0,0,0.8);
+		text-decoration: none;
+		background-color: rgba(0,0,0,0.2);
+		border-color: rgba(0,0,0,0.3);
+	}
+</style>
+<div style="text-align: center; padding:2rem 1rem;">
 	<select id="unit">
 		<option value="7b_u1">
 			Unit 1
@@ -220,21 +234,19 @@ $(function() {
 		</option>
 	</select>
 	<div style="margin: auto;">
-		<span id="hint">
-		</span>
+		<span id="hint">Loading...</span>
 		<br />
-		<input id="play" style="margin-left: 5px; border: none;" type="image" src="/images/play.png">
-		</Button>
+		<input id="play" style="margin-left: 5px; border: none;" type="image" src="/images/play.png" />
 	</div>
 	<div style="margin: auto; margin-bottom: 10px;">
-		<span id="notice" style="float: left" ></span>
-		<span id="result" style="float: right" ></span>
+		<span id="notice" style="float: left"></span>
+		<span id="result" style="float: right"></span>
 	</div>
 	<br />
-	<input type="text" id="text" autocomplete="off" style="text-align: center;">
+	<input type="text" id="text" autocomplete="off" style="font-size: 20px; outline: none; text-align: center; height: 33px; width: 100%; border-bottom: 1px solid #dbdbdb; border-top:0px; border-left:0px; border-right:0px;" />
 	<br />
-	<button type="button" id="help" style="margin-top: 5px; margin-right: 10px;"></button>
-	<button type="button" id="again" style="margin-top: 5px;"></button>
+	<button type="button" id="help" style="margin-top: 5px; margin-right: 10px;" class="bton">Please</button>
+	<button type="button" id="again" style="margin-top: 5px;" class="bton">wait...</button>
 	<br />
 	<span id="version" style="float: right;"></p>
 </div>
