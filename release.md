@@ -8,7 +8,7 @@ $(function() {
 	*/
 	
 	var selected = "7b_u1"
-	var version = "1.2.2 - preview - 7"  
+	var version = "1.2.2 - preview - 8"  
 	var versionS = "release"
 	var complete = false
 	var allcount
@@ -140,15 +140,15 @@ $(function() {
 				allcount = words.length
 				$("#hint").html(words[words_index].notice)
 				$("#result").html(rightcount + "/" + allcount)
+				unit_xml = undefined
+				$("#help").html("提示") 
+				$("#again").html("重默")
+				$("#notice").html("")
 				name = undefined
 				trans = undefined
 				notice = undefined
 			}
 		}) 
-		unit_xml = undefined
-		$("#help").html("提示") 
-		$("#again").html("重默")
-		$("#notice").html("")
 		
 		//====================
 		
@@ -191,6 +191,7 @@ $(function() {
 			if (e.keyCode == 13) {
 				$("#notice").html("")
 				if (correct == false && time == undefined) {
+					$("#text").attr("class", "input-wrong")
 					helpcount++
 					$("#notice").html("<font color='red'>请输入正确的单词：" + words[words_index].name + "</font>")
 					$("#text").val("")
@@ -201,6 +202,7 @@ $(function() {
 					1000)
 				} else if (correct == true) {
 					setTimeout(function() {
+						$("#text").attr("class", "input")
 						if (++rightcount >= allcount) {
 							clearInterval(timer)
 							$("#text").val("") 
@@ -255,10 +257,34 @@ $(function() {
 	.play:hover {
 		background-position: -90px 3px; 
 	}
+	.input, select {
+		transition: 0.5s;
+		outline: none;
+		text-align: center; 
+		border-bottom: 2px solid #EEEEEE; 
+		border-top: none; 
+		border-left: none;
+		border-right: none;
+	}
+	.input:focus {
+		border-bottom: 3px solid #30FF30; 
+	}
+	.input-wrong {
+		transition: 0.5s;
+		outline: none;
+		text-align: center; 
+		border-top: none; 
+		border-left: none;
+		border-right: none;
+		border-bottom: 3px solid #FF0000; 
+	}
+	.select:focus {
+		border-bottom: 2px solid #FF7070; 
+	}
 </style>
 <div style="text-align: center; padding:2rem 1rem;">
 	<div>
-		<select id="unit">
+		<select class="select" id="unit" style="margin-bottom: 2px">
 			<option value="7b_u1">
 				Unit 1
 			</option>
@@ -299,7 +325,7 @@ $(function() {
 		<span id="result" style="float: right">0/0</span>
 	</div>
 	<div>
-		<input type="text" id="text" autocomplete="off" style="font-size: 20px; outline: none; text-align: center; height: 33px; width: 100%; border-bottom: 1px solid #dbdbdb; border-top:0px; border-left:0px; border-right:0px;" />
+		<input class="input" type="text" id="text" autocomplete="off" style="height: 33px; width: 100%; font-size: 20px;" />
 	</div>
 	<div>
 		<button type="button" id="help" style="margin-top: 5px; margin-right: 10px;" class="bton">Please</button>
