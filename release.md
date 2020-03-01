@@ -8,7 +8,7 @@ $(function() {
 	*/
 	
 	var selected = "7b_u1"
-	var version = "1.2.2 - preview - 4"  
+	var version = "1.2.2 - preview - 7"  
 	var versionS = "release"
 	var complete = false
 	var allcount
@@ -47,9 +47,6 @@ $(function() {
 	
 	$("#unit").off("change").on("change", 
 	function() {
-		$("#hint").html("Loading...")
-		$("#help").html("Please")
-		$("#again").html("wait...")
 		selected = $(this).children('option:selected').val() 
 		memorize_words(selected)  
 	}) 
@@ -114,8 +111,11 @@ $(function() {
 		
 		//====================
 		
-		$("#notice").html("")
 		$("#text").val("")
+		$("#hint").html("Loading...")
+		$("#help").html("Please")
+		$("#again").html("wait...")
+		$("#result").html("0/0")
 		
 		//====================
 		
@@ -139,7 +139,7 @@ $(function() {
 				words.sort(randomsort)  
 				allcount = words.length
 				$("#hint").html(words[words_index].notice)
-				$("#result").html("" + rightcount + "/" + allcount)
+				$("#result").html(rightcount + "/" + allcount)
 				name = undefined
 				trans = undefined
 				notice = undefined
@@ -148,11 +148,13 @@ $(function() {
 		unit_xml = undefined
 		$("#help").html("提示") 
 		$("#again").html("重默")
+		$("#notice").html("")
 		
 		//====================
 		
+		$("#time").html(timecount)
 		timer = setInterval(function(){
-			timecount++
+			$("#time").html(++timecount)
 		},
 		1000)
 		
@@ -166,7 +168,7 @@ $(function() {
 			$("#hint").html(words[++words_index].notice) 
 			$("#text").val("") 
 			$("#notice").html("")
-			$("#result").html("" + rightcount + "/" + allcount)
+			$("#result").html(rightcount + "/" + allcount)
 		}
 		$("#text").off("input").on("input",
 		function() {
@@ -187,10 +189,8 @@ $(function() {
 		$("#text").off("keydown").on("keydown",
 		function(e) {
 			if (e.keyCode == 13) {
-				time = undefined
-				clearTimeout(time)
 				$("#notice").html("")
-				if (correct == false) {
+				if (correct == false && time == undefined) {
 					helpcount++
 					$("#notice").html("<font color='red'>请输入正确的单词：" + words[words_index].name + "</font>")
 					$("#text").val("")
@@ -199,7 +199,7 @@ $(function() {
 						time = undefined
 					},
 					1000)
-				} else {
+				} else if (correct == true) {
 					setTimeout(function() {
 						if (++rightcount >= allcount) {
 							clearInterval(timer)
@@ -244,51 +244,69 @@ $(function() {
 		background-color: rgba(0,0,0,0.2);
 		border-color: rgba(0,0,0,0.3);
 	}
+	.play {
+		background: url('/images/youdao-img.png') no-repeat;
+		background-position: -119px 3px; 
+		border: none; 
+		width: 16px; 
+		height: 25px;
+		outline: none;
+	}
+	.play:hover {
+		background-position: -90px 3px; 
+	}
 </style>
 <div style="text-align: center; padding:2rem 1rem;">
-	<select id="unit">
-		<option value="7b_u1">
-			Unit 1
-		</option>
-		<option value="7b_u2">
-			Unit 2
-		</option>
-		<option value="7b_u3">
-			Unit 3
-		</option>
-		<option value="7b_u4">
-			Unit 4
-		</option>
-		<option value="7b_u5">
-			Unit 5
-		</option>
-		<option value="7b_u6">
-			Unit 6
-		</option>
-		<option value="7b_u7">
-			Unit 7
-		</option>
-		<option value="7b_u8">
-			Unit 8
-		</option>
-		<option value="test">
-			测试
-		</option>
-	</select>
-	<div style="margin: auto;">
-		<span id="hint">Loading...</span>
-		<br />
-		<input id="play" style="margin-left: 5px; border: none;" type="image" src="/images/play.png" />
+	<div>
+		<select id="unit">
+			<option value="7b_u1">
+				Unit 1
+			</option>
+			<option value="7b_u2">
+				Unit 2
+			</option>
+			<option value="7b_u3">
+				Unit 3
+			</option>
+			<option value="7b_u4">
+				Unit 4
+			</option>
+			<option value="7b_u5">
+				Unit 5
+			</option>
+			<option value="7b_u6">
+				Unit 6
+			</option>
+			<option value="7b_u7">
+				Unit 7
+			</option>
+			<option value="7b_u8">
+				Unit 8
+			</option>
+			<option value="test">
+				测试
+			</option>
+		</select>
 	</div>
-	<div style="margin: auto; margin-bottom: 10px;">
+	<div>
+		<span id="hint">Loading...</span>
+	</div>
+	<div>
+		<input id="play" class="play" type="button" />
+	</div>
+	<div style="margin-bottom: 15px;">
 		<span id="notice" style="float: left">就快好了！ ヾ(≧▽≦*)o</span>
 		<span id="result" style="float: right">0/0</span>
 	</div>
-	<br />
-	<input type="text" id="text" autocomplete="off" style="font-size: 20px; outline: none; text-align: center; height: 33px; width: 100%; border-bottom: 1px solid #dbdbdb; border-top:0px; border-left:0px; border-right:0px;" />
-	<br />
-	<button type="button" id="help" style="margin-top: 5px; margin-right: 10px;" class="bton">Please</button>
-	<button type="button" id="again" style="margin-top: 5px;" class="bton">wait...</button>
-	<br />
-	<span id="version" style="float: right;"></p>
+	<div>
+		<input type="text" id="text" autocomplete="off" style="font-size: 20px; outline: none; text-align: center; height: 33px; width: 100%; border-bottom: 1px solid #dbdbdb; border-top:0px; border-left:0px; border-right:0px;" />
+	</div>
+	<div>
+		<button type="button" id="help" style="margin-top: 5px; margin-right: 10px;" class="bton">Please</button>
+		<button type="button" id="again" style="margin-top: 5px;" class="bton">wait...</button>
+	</div>
+	<div style="margin-bottom: 15px;">
+		<span id="time" style="float: left">0</span>
+		<span id="version" style="float: right;">version 0</span>
+	</div>
 </div>
