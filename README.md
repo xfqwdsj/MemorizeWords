@@ -1,12 +1,13 @@
 # Note
 如需要使用html 请自行将`*.md`文件重命名为`*.htm`或`*.html`文件 谢谢！
 
-根目录下的`favicon.ico`用于有道发音接口调用时凑数 因为它每调用一次就会找一找`favicon.ico`到哪儿去了 然后告诉我404
+根目录下的`favicon.ico`用于有道发音接口调用时凑数 因为它每调用一次就会找一找`favicon.ico`到哪儿去了 然后网页就告诉我404
+![404](https://github.com/xfqwdsj/Images/raw/master/image_202003011357_404.png)
 
 并非独自完成 基本代码来自 [浩子同学](http://songwh.top/2018/10/27/%E5%88%A9%E7%94%A8JQuery%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E7%BD%91%E9%A1%B5%E7%9A%84%E8%83%8C%E5%8D%95%E8%AF%8D%E7%B3%BB%E7%BB%9F/)
 # CSDN
 [CSDN](https://blog.csdn.net/qq_42763682/article/details/104518010)
-# website
+# Website
 [github.io](https://xfqwdsj.github.io/mword/)
 # QQ
 2996681473
