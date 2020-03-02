@@ -1,5 +1,6 @@
-<script type="text/javascript" src="/jquery.js">
-</script>
+<link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+<link rel="stylesheet" type="text/css" href="/css/component.css" />
+<script type="text/javascript" src="/jquery.js"></script>
 <script type="text/javascript">
 $(function() {
 
@@ -8,26 +9,10 @@ $(function() {
 	*/
 	
 	var selected = "7b_u1"
-	var version = "1.2.2 - preview - 8"  
+	var version = "1.2.2 - preview - 14"  
 	var versionS = "debug"
 	var complete = false
-	var allcount
-	var audio
-	var helpcount
-	var correct
-	var name
-	var notice
-	var rightcount
-	var trans
-	var unit_xml
-	var value_index
-	var words
-	var words_index
-	var time
-	var timer
-	var timeresultM
-	var timeresultS
-	var timeresult
+	var allcount, helpcount, correct, name, notice, rightcount, trans, unit_xml, words, words_index, time, timer, timeresultM, timeresultS, timeresult, timecount, diyhelp
 	
 	/*
 		定义变量 - 结束
@@ -37,7 +22,7 @@ $(function() {
 	
 	memorize_words("7b_u1") 
 	$("#version").html(versionS + " " +version)  
-	version = undefined
+	version = versionS = undefined
 	
 	/*
 		初始化 - 结束
@@ -45,6 +30,11 @@ $(function() {
 		基本方法 - 开始
 	*/
 	
+	$("#input-helpdiy").off("input").on("input",
+	function() {
+		diyhelp = $("#input-helpdiy").val()
+		memorize_words(selected)
+	})
 	$("#unit").off("change").on("change", 
 	function() {
 		selected = $(this).children('option:selected').val() 
@@ -53,9 +43,9 @@ $(function() {
 	$("#help").off("click").on("click",
 	function() {
 		if (!complete) {
-			if(versionS == "release") {
-				$("#notice").html(words[words_index].name.substring(0, 2)) 
-			} else {
+			if($("#input-helpdiy").val() != 0) {
+				$("#notice").html(words[words_index].name.substring(0, $("#input-helpdiy").val())) 
+			} else if($("#input-helpdiy").val() == 0) {
 				$("#notice").html(words[words_index].name)
 			}
 			helpcount++
@@ -71,21 +61,20 @@ $(function() {
 					timeresultS = timecount
 				} 
 				timeresult = timeresultM + ":" + timeresultS
-				timeresultM = 0
-				timeresultS = 0
-				timecount = 0
+				timeresultM = timeresultS = timecount = 0
 			}
-			alert("共默写" + allcount + "个单词 共提示" + helpcount + "次 用时" + timeresult)
+			if(diyhelp == 0) {
+				diyhelp = "全部"
+			}
+			alert("共默写" + allcount + "个单词 共提示" + helpcount + "次 使用提示字数" + diyhelp + "个 用时" + timeresult)
 		}
 	})
 	$("#play").off("click").on("click",
 	function() {
 		if (!complete) {
-			audio = new Audio("http://dict.youdao.com/speech?audio=" + words[words_index].name)
-			audio.play()
+			new Audio("http://dict.youdao.com/speech?audio=" + words[words_index].name).play()
 		} else {
-			audio = new Audio("/sounds/win.mp3")
-			audio.play()
+			new Audio("/sounds/win.mp3").play()
 		}
 	})
 	$("#again").off("click").on("click",
@@ -94,19 +83,12 @@ $(function() {
 	})
 	function memorize_words(units) {
 		clearInterval(timer)
+		$("#text").attr("class", "myInput")
+		diyhelp = $("#input-helpdiy").val()
 		words = new Array()
-		complete = false
-		correct = false
-		allcount = 0
-		helpcount = 0 
-		rightcount = 0
-		value_index = 0
-		words_index = 0
-		time = undefined
-		timer = undefined
-		timecount = 0
-		timeresultM = 0
-		timeresultS = 0
+		complete = correct = false
+		allcount = helpcount = rightcount = words_index = timecount = timeresultM = timeresultS = 0
+		time = timer = undefined
 		timeresult = "获取失败"
 		
 		//====================
@@ -140,13 +122,10 @@ $(function() {
 				allcount = words.length
 				$("#hint").html(words[words_index].notice)
 				$("#result").html(rightcount + "/" + allcount)
-				unit_xml = undefined
 				$("#help").html("提示") 
 				$("#again").html("重默")
 				$("#notice").html("")
-				name = undefined
-				trans = undefined
-				notice = undefined
+				name = trans = notice = unit_xml = undefined
 			}
 		}) 
 		
@@ -175,9 +154,7 @@ $(function() {
 			var hint = $("#hint").html()
 			$("#notice").html("")
 			if (!complete) {
-				var value = words[words_index].name.trim() 
-				value = value.toLowerCase() 
-				if ($("#text").val().toLowerCase().trim() == value) {
+				if ($("#text").val().toLowerCase().trim() == words[words_index].name.trim().toLowerCase() ) {
 					correct = true
 				} else {
 					correct = false
@@ -202,7 +179,7 @@ $(function() {
 					1000)
 				} else if (correct == true) {
 					setTimeout(function() {
-						$("#text").attr("class", "input")
+						$("#text").attr("class", "myInput")
 						if (++rightcount >= allcount) {
 							clearInterval(timer)
 							$("#text").val("") 
@@ -257,7 +234,7 @@ $(function() {
 	.play:hover {
 		background-position: -90px 3px; 
 	}
-	.input, select {
+	.myInput, select {
 		transition: 0.5s;
 		outline: none;
 		text-align: center; 
@@ -266,7 +243,7 @@ $(function() {
 		border-left: none;
 		border-right: none;
 	}
-	.input:focus {
+	.myInput:focus {
 		border-bottom: 3px solid #30FF30; 
 	}
 	.input-wrong {
@@ -281,37 +258,26 @@ $(function() {
 	.select:focus {
 		border-bottom: 2px solid #FF7070; 
 	}
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+	}
+	input[type="number"] {
+		-moz-appearance: textfield;
+	}
 </style>
 <div style="text-align: center; padding:2rem 1rem;">
 	<div>
 		<select class="select" id="unit" style="margin-bottom: 2px">
-			<option value="7b_u1">
-				Unit 1
-			</option>
-			<option value="7b_u2">
-				Unit 2
-			</option>
-			<option value="7b_u3">
-				Unit 3
-			</option>
-			<option value="7b_u4">
-				Unit 4
-			</option>
-			<option value="7b_u5">
-				Unit 5
-			</option>
-			<option value="7b_u6">
-				Unit 6
-			</option>
-			<option value="7b_u7">
-				Unit 7
-			</option>
-			<option value="7b_u8">
-				Unit 8
-			</option>
-			<option value="test">
-				测试
-			</option>
+			<option value="7b_u1">Unit 1</option>
+			<option value="7b_u2">Unit 2</option>
+			<option value="7b_u3">Unit 3</option>
+			<option value="7b_u4">Unit 4</option>
+			<option value="7b_u5">Unit 5</option>
+			<option value="7b_u6">Unit 6</option>
+			<option value="7b_u7">Unit 7</option>
+			<option value="7b_u8">Unit 8</option>
+			<option value="test">测试</option>
 		</select>
 	</div>
 	<div>
@@ -327,12 +293,61 @@ $(function() {
 	<div>
 		<input class="input" type="text" id="text" autocomplete="off" style="height: 33px; width: 100%; font-size: 20px;" />
 	</div>
-	<div>
-		<button type="button" id="help" style="margin-top: 5px; margin-right: 10px;" class="bton">Please</button>
-		<button type="button" id="again" style="margin-top: 5px;" class="bton">wait...</button>
+	<div style="margin-top: 5px;">
+		<button type="button" id="help" style="margin-right: 5px;" class="bton">Please</button>
+		<button type="button" id="again" style="margin-left: 5px;" class="bton">wait...</button>
 	</div>
 	<div style="margin-bottom: 15px;">
 		<span id="time" style="float: left">0</span>
 		<span id="version" style="float: right;">version 0</span>
 	</div>
 </div>
+<hr />
+<div style="text-align: center; padding:2rem 1rem;">
+	<div>
+		<span>提示选项</span>
+	</div>
+	<div>
+		<span><font color="red">设置一次即重默一次</font></span>
+	</div>
+	<div style="margin-top: 20px;">
+		<span class="input input--akira">
+			<input class="input__field input__field--akira" type="number" id="input-helpdiy" οnkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" />
+			<label class="input__label input__label--akira" for="input-helpdiy">
+				<span class="input__label-content input__label-content--akira">提示字数（留空为全部提示）</span>
+			</label>
+		</span>
+	</div>
+</div>
+<script type="text/javascript" src="/js/classie.js"></script>
+<script type="text/javascript">
+(function() {
+	// trim polyfill : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
+	if (!String.prototype.trim) {
+		(function() {
+			// Make sure we trim BOM and NBSP
+			var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+			String.prototype.trim = function() {
+				return this.replace(rtrim, '')
+			}
+		})
+	}
+	[].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
+		// in case the input is already filled..
+		if( inputEl.value.trim() !== '' ) {
+			classie.add( inputEl.parentNode, 'input--filled' )
+		}
+		// events:
+		inputEl.addEventListener( 'focus', onInputFocus )
+		inputEl.addEventListener( 'blur', onInputBlur )
+	} )
+	function onInputFocus( ev ) {
+		classie.add( ev.target.parentNode, 'input--filled' )
+	}
+	function onInputBlur( ev ) {
+		if( ev.target.value.trim() === '' ) {
+			classie.remove( ev.target.parentNode, 'input--filled' )
+		}
+	}
+})()
+</script>
