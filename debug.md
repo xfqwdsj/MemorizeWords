@@ -9,7 +9,7 @@ $(function() {
 	*/
 	
 	var selected = "7b_u1"
-	var version = "1.2.2 - preview - 14"  
+	var version = "1.2.2 - preview - 15"  
 	var versionS = "debug"
 	var complete = false
 	var allcount, helpcount, correct, name, notice, rightcount, trans, unit_xml, words, words_index, time, timer, timeresultM, timeresultS, timeresult, timecount, diyhelp
@@ -32,6 +32,9 @@ $(function() {
 	
 	$("#input-helpdiy").off("input").on("input",
 	function() {
+		if($("#input-helpdiy").val() == 0) {
+			$("#input-helpdiy").val("")
+		}
 		diyhelp = $("#input-helpdiy").val()
 		memorize_words(selected)
 	})
@@ -66,7 +69,7 @@ $(function() {
 			if(diyhelp == 0) {
 				diyhelp = "全部"
 			}
-			alert("共默写" + allcount + "个单词 共提示" + helpcount + "次 使用提示字数" + diyhelp + "个 用时" + timeresult)
+			alert("共默写" + allcount + "个单词 共提示" + helpcount + "次 使用提示字数" + diyhelp + " 用时" + timeresult)
 		}
 	})
 	$("#play").off("click").on("click",
