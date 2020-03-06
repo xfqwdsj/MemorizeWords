@@ -1,3 +1,7 @@
+---
+title: 背单词
+---
+
 <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
 <link rel="stylesheet" type="text/css" href="/css/component.css" />
 <script type="text/javascript" src="/jquery.js"></script>
@@ -9,10 +13,10 @@ $(function() {
 	*/
 	
 	var selected = "7b_u1"
-	var version = "1.2.2 - preview - 15"  
+	var version = "1.2.3.9"  
 	var versionS = "debug"
 	var complete = false
-	var allcount, helpcount, correct, name, notice, rightcount, trans, unit_xml, words, words_index, time, timer, timeresultM, timeresultS, timeresult, timecount, diyhelp
+	var allcount, helpcount, correct, name, notice, rightcount, trans, unit_xml, words, words_index, time, timer, timeresultM, timeresultS, timeresult, timecount, diyhelp, count, date, name
 	
 	/*
 		定义变量 - 结束
@@ -20,7 +24,8 @@ $(function() {
 		初始化 - 开始
 	*/
 	
-	memorize_words("7b_u1") 
+	selected = $("#unit").val()
+	memorize_words(selected)
 	$("#version").html(versionS + " " +version)  
 	version = versionS = undefined
 	
@@ -40,7 +45,7 @@ $(function() {
 	})
 	$("#unit").off("change").on("change", 
 	function() {
-		selected = $(this).children('option:selected').val() 
+		selected = $("#unit").val()
 		memorize_words(selected)  
 	}) 
 	$("#help").off("click").on("click",
@@ -69,7 +74,19 @@ $(function() {
 			if(diyhelp == 0) {
 				diyhelp = "全部"
 			}
-			alert("共默写" + allcount + "个单词 共提示" + helpcount + "次 使用提示字数" + diyhelp + " 用时" + timeresult)
+			count = "共默写" + allcount + "个单词 共提示" + helpcount + "次 使用提示字数" + diyhelp + " 用时" + timeresult + "\n获取分享链接？"
+			if(confirm(count)) {
+				name = prompt("请输入你的名字：", "没名字")
+				if(diyhelp == "全部") {
+					diyhelp = 0
+				}
+				if(name == undefined) {
+					name = "没名字"
+				}
+				window.open("result.html?aff645cab7b897442173e9db545a7e11=" + date + "&0d11ccc47ab4ad4a233279a8909769d1=" + getKey() + "&unit=" + lockWords(selected) + "&timer=" + lockTime(timeresult) + "&diyhelp=" + lockNumbers(diyhelp) + "&help=" + lockNumbers(helpcount) + "&name=" + lockWords(name), '_blank').location
+				diyhelp = "全部"
+				name = undefined
+			}
 		}
 	})
 	$("#play").off("click").on("click",
@@ -84,23 +101,111 @@ $(function() {
 	function() {
 		memorize_words(selected)
 	})
+	$("#text").off("input").on("input",
+	function() {
+		var hint = $("#hint").html()
+		$("#notice").html("")
+		if (!complete) {
+			if ($("#text").val().toLowerCase().trim() == words[words_index].name.trim().toLowerCase() ) {
+				correct = true
+			} else {
+				correct = false
+			}
+		} else {
+			$("#text").val("")
+		}
+	}) 
+	$("#text").off("keydown").on("keydown",
+	function(e) {
+		if (e.keyCode == 13) {
+			$("#notice").html("")
+			if (correct == false && time == undefined) {
+				$("#text").attr("class", "input-wrong")
+				helpcount++
+				$("#notice").html("<font color='red'>请输入正确的单词：" + words[words_index].name + "</font>")
+				$("#text").val("")
+				time = setTimeout(function() {
+					$("#notice").html("")
+					time = undefined
+				},
+				1000)
+			} else if (correct == true) {
+				setTimeout(function() {
+					$("#text").attr("class", "myInput")
+					if (++rightcount >= allcount) {
+						clearInterval(timer)
+						$("#text").val("") 
+						$("#result").html("") 
+						$("#notice").html("") 
+						$("#help").html("统计") 
+						$("#hint").html("<font color='green'>恭喜你 默写完成</font>")
+						date = Date.parse(new Date())
+						complete = true
+					} else {
+						update()
+					}
+				},
+				100)
+			}
+		}
+	})
+	function getKey() {
+		if(date != undefined) {
+			return date.toString().substring(4, 10) * date.toString().substring(0, 5)
+		}
+	}
+	function lockWords(data) {
+		var returnWords = ""
+		$(data.split("")).each(function(index) {
+			returnWords = returnWords + "/" + (parseInt($(this)[0].charCodeAt()) + parseInt(date.toString().substring(0, 5))) * parseInt(date.toString().substring(4, 10))
+		})
+		return returnWords
+		returnWords = undefined
+	}
+	function lockNumbers(data) {
+		return (parseInt(data) + parseInt(date.toString().substring(0, 5))) * parseInt(date.toString().substring(4, 10))
+	}
+	function lockTime(data) {
+		data = data.replace(":", "/" + date.toString().substring(4, 10) * date.toString().substring(9, 10) + "/")
+		dataArray = data.split("/")
+		data = dataArray[0] + "/" + (parseInt(dataArray[1]) + (parseInt(dataArray[0]) * parseInt(date.toString().substring(8, 9)) + parseInt(dataArray[2]) * parseInt(date.toString().substring(9, 10))) * parseInt(date.toString().substring(4, 10))) + "/" + dataArray[2]
+		return data
+	}
+	function startTimer() {
+		$("#time").html(timecount)
+		timer = setInterval(function(){
+			$("#time").html(++timecount)
+		},
+		1000)
+	}
+	function randomsort(a, b) {
+		return Math.random() > .5 ? -1 : 1  
+	}
+	function update() {
+		correct = false
+		$("#hint").html(words[++words_index].notice) 
+		$("#text").val("") 
+		$("#notice").html("")
+		$("#result").html(rightcount + "/" + allcount)
+	}
+	
+	/*
+		基本方法 结束
+	*/
 	function memorize_words(units) {
 		clearInterval(timer)
 		$("#text").attr("class", "myInput")
-		diyhelp = $("#input-helpdiy").val()
-		words = new Array()
-		complete = correct = false
-		allcount = helpcount = rightcount = words_index = timecount = timeresultM = timeresultS = 0
-		time = timer = undefined
-		timeresult = "获取失败"
-		
-		//====================
-		
 		$("#text").val("")
 		$("#hint").html("Loading...")
 		$("#help").html("Please")
 		$("#again").html("wait...")
 		$("#result").html("0/0")
+		diyhelp = $("#input-helpdiy").val()
+		words = new Array()
+		complete = correct = false
+		allcount = helpcount = rightcount = words_index = timecount = timeresultM = timeresultS = 0
+		time = timer = count = undefined
+		timeresult = "获取失败"
 		
 		//====================
 		
@@ -128,83 +233,11 @@ $(function() {
 				$("#help").html("提示") 
 				$("#again").html("重默")
 				$("#notice").html("")
+				startTimer()
 				name = trans = notice = unit_xml = undefined
 			}
-		}) 
-		
-		//====================
-		
-		$("#time").html(timecount)
-		timer = setInterval(function(){
-			$("#time").html(++timecount)
-		},
-		1000)
-		
-		//====================
-		
-		function randomsort(a, b) {
-			return Math.random() > .5 ? -1 : 1  
-		}
-		function update() {
-			correct = false
-			$("#hint").html(words[++words_index].notice) 
-			$("#text").val("") 
-			$("#notice").html("")
-			$("#result").html(rightcount + "/" + allcount)
-		}
-		$("#text").off("input").on("input",
-		function() {
-			var hint = $("#hint").html()
-			$("#notice").html("")
-			if (!complete) {
-				if ($("#text").val().toLowerCase().trim() == words[words_index].name.trim().toLowerCase() ) {
-					correct = true
-				} else {
-					correct = false
-				}
-			} else {
-				$("#text").val("")
-			}
-		}) 
-		$("#text").off("keydown").on("keydown",
-		function(e) {
-			if (e.keyCode == 13) {
-				$("#notice").html("")
-				if (correct == false && time == undefined) {
-					$("#text").attr("class", "input-wrong")
-					helpcount++
-					$("#notice").html("<font color='red'>请输入正确的单词：" + words[words_index].name + "</font>")
-					$("#text").val("")
-					time = setTimeout(function() {
-						$("#notice").html("")
-						time = undefined
-					},
-					1000)
-				} else if (correct == true) {
-					setTimeout(function() {
-						$("#text").attr("class", "myInput")
-						if (++rightcount >= allcount) {
-							clearInterval(timer)
-							$("#text").val("") 
-							$("#result").html("") 
-							$("#notice").html("") 
-							$("#help").html("统计") 
-							$("#hint").html("<font color='green'>恭喜你 默写完成</font>")
-							complete = true
-						} else {
-							update()
-						}
-					},
-					100)
-				}
-			}
-		}) 
+		})  
 	}
-	
-	/*
-		基本方法 - 结束
-	*/
-	
 })
 </script>
 <style type="text/css">
@@ -237,7 +270,7 @@ $(function() {
 	.play:hover {
 		background-position: -90px 3px; 
 	}
-	.myInput, select {
+	.myInput {
 		transition: 0.5s;
 		outline: none;
 		text-align: center; 
@@ -258,7 +291,12 @@ $(function() {
 		border-right: none;
 		border-bottom: 3px solid #FF0000; 
 	}
-	.select:focus {
+	.select {
+		outline: none;
+		text-align: center; 
+		border-top: none; 
+		border-left: none;
+		border-right: none;
 		border-bottom: 2px solid #FF7070; 
 	}
 	input::-webkit-outer-spin-button,
@@ -294,7 +332,7 @@ $(function() {
 		<span id="result" style="float: right">0/0</span>
 	</div>
 	<div>
-		<input class="input" type="text" id="text" autocomplete="off" style="height: 33px; width: 100%; font-size: 20px;" />
+		<input class="myInput" type="text" id="text" autocomplete="off" style="height: 33px; width: 100%; font-size: 20px;" />
 	</div>
 	<div style="margin-top: 5px;">
 		<button type="button" id="help" style="margin-right: 5px;" class="bton">Please</button>
