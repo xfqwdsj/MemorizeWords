@@ -1,5 +1,5 @@
 # Note
-如需要使用html 请自行将`*.md`文件重命名为`*.htm`或`*.html`文件 谢谢！
+如需要使用html 请自行将`*.md`文件重命名为`*.htm`或`*.html`文件 并删除文件开头三行 谢谢！
 
 根目录下的`favicon.ico`用于有道发音接口调用时凑数 因为它每调用一次就会找一找`favicon.ico`到哪儿去了 然后网页就告诉我404
 ![404](https://github.com/xfqwdsj/Images/raw/master/image_202003011357_404.png)
