@@ -5,6 +5,22 @@ title: 背单词
 <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
 <link rel="stylesheet" type="text/css" href="/css/component.css" />
 <script type="text/javascript" src="/jquery.js"></script>
+<script type="text/javascript">
+AV.init({
+	appId: "{{ site.mwordLC.appId }}",
+	appKey: "{{ site.mwordLC.appKey }}",
+	serverURLs: "{{ site.mwordLC.sURL }}"
+})
+var currentUser = AV.User.current()
+$(function() {
+	if(currentUser) {
+		$("#user").html("<a href='/mword/mword-user.html'>" + currentUser._serverData.username + "</a>")
+	}
+	else {
+		$("#user").html("请<a href='/mword/mword-login.html'>登录</a> 或<a href=''>刷新</a> 否则本次默写数据无效 ")
+	}
+})
+</script>
 <script type="text/javascript" src="/js/debug.js"></script>
 <style type="text/css">
 	.bton {
@@ -89,6 +105,7 @@ title: 背单词
 	}
 </style>
 <div style="text-align: center; padding:2rem 1rem;">
+	<p id="user"></p>
 	<div>
 		<select class="select" id="unit" style="margin-bottom: 2px">
 			<option value="7b_u1">Unit 1</option>

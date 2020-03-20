@@ -4,10 +4,10 @@ $(function() {
 		定义变量 - 开始
 	*/
 	
-	var version = "1.2.3.13"  
+	var version = "1.2.5"  
 	var versionS = "release"
 	var complete = false
-	var allcount, helpcount, correct, name, notice, rightcount, trans, unit_xml, words, words_index, time, timer, timeresultM, timeresultS, timeresult, timecount, diyhelp, count, date, name
+	var allcount, helpcount, correct, name, notice, rightcount, trans, unit_xml, words, words_index, time, timer, timeresultM, timeresultS, timeresult, timecount, diyhelp, count, name, MwordsResult, mwordsresult, upload
 	
 	/*
 		定义变量 - 结束
@@ -49,18 +49,28 @@ $(function() {
 			}
 			helpcount++
 		} else {
-			count = "共默写" + allcount + "个单词 共提示" + helpcount + "次 使用提示字数" + diyhelp + " 用时" + timeresult + "\n获取分享链接？"
 			if(confirm(count)) {
-				name = prompt("请输入你的名字：", "没名字")
-				if(diyhelp == "全部") {
-					diyhelp = 0
+				if(currentUser) {
+					if(upload == false) {
+						MwordsResult = AV.Object.extend("MwordsResult")
+						mwordsresult = new MwordsResult()
+						mwordsresult.set("unit", $("#unit").val())
+						mwordsresult.set("timer", timeresult)
+						mwordsresult.set("diyhelp", diyhelp)
+						mwordsresult.set("help", helpcount)
+						mwordsresult.set("userid", currentUser.id)
+						mwordsresult.save().then(function (saveresult) {
+							window.open("result.html?id=" + saveresult.id, '_blank').location
+							upload = true
+						}, function (error) {
+							alert("存储异常：\n" + error)
+						})
+					}
+				} else {
+					window.location.href = "/mword/mword-login.html"
 				}
-				if(name == null || name == "") {
-					name = "没名字"
-				}
-				window.open("result.html?aff645cab7b897442173e9db545a7e11=" + date + "&0d11ccc47ab4ad4a233279a8909769d1=" + getKey() + "&unit=" + lockWords($("#unit").val()) + "&timer=" + lockTime(timeresult) + "&diyhelp=" + lockNumbers(diyhelp) + "&help=" + lockNumbers(helpcount) + "&name=" + lockWords(name), '_blank').location
+				MwordsResult = mwordsresult = name = null
 				diyhelp = "全部"
-				name = null
 			}
 		}
 	})
@@ -114,7 +124,6 @@ $(function() {
 						$("#notice").html("") 
 						$("#help").html("统计") 
 						$("#hint").html("<font color='green'>恭喜你 默写完成</font>")
-						date = Date.parse(new Date())
 						complete = true
 						if(timeresult == "获取失败") {
 							while(timecount >= 60) {
@@ -132,6 +141,7 @@ $(function() {
 						if(diyhelp == 0) {
 							diyhelp = "全部"
 						}
+						count = "共默写" + allcount + "个单词 共提示" + helpcount + "次 使用提示字数" + diyhelp + " 用时" + timeresult + "\n获取分享链接？"
 					} else {
 						update()
 					}
@@ -140,27 +150,20 @@ $(function() {
 			}
 		}
 	})
-	function getKey() {
-		if(date != null) {
-			return date.toString().substring(4, 10) * date.toString().substring(0, 5)
+	function getID() {
+		var ID = ""
+		for(var i = 0; i < 40; i++) {
+			if(parseInt(Math.random() * (2 - 1 + 1) + 1) == 1) {
+				if(parseInt(Math.random() * (2 - 1 + 1) + 1) == 1) {
+					ID = ID + String.fromCharCode(parseInt(Math.random() * (90 - 65 + 1) + 65))
+				} else {
+					ID = ID + String.fromCharCode(parseInt(Math.random() * (122 - 97 + 1) + 97))
+				}
+			} else {
+				ID = ID + parseInt(Math.random() * (9 - 0 + 1) + 0).toString()
+			}
 		}
-	}
-	function lockWords(data) {
-		var returnWords = ""
-		$(data.split("")).each(function(index) {
-			returnWords = returnWords + "/" + (parseInt($(this)[0].charCodeAt()) + parseInt(date.toString().substring(0, 5))) * parseInt(date.toString().substring(4, 10))
-		})
-		return returnWords
-		returnWords = null
-	}
-	function lockNumbers(data) {
-		return (parseInt(data) + parseInt(date.toString().substring(0, 5))) * parseInt(date.toString().substring(4, 10))
-	}
-	function lockTime(data) {
-		data = data.replace(":", "/" + date.toString().substring(4, 10) * date.toString().substring(9, 10) + "/")
-		dataArray = data.split("/")
-		data = dataArray[0] + "/" + (parseInt(dataArray[1]) + (parseInt(dataArray[0]) * parseInt(date.toString().substring(8, 9)) + parseInt(dataArray[2]) * parseInt(date.toString().substring(9, 10))) * parseInt(date.toString().substring(4, 10))) + "/" + dataArray[2]
-		return data
+		return ID
 	}
 	function startTimer() {
 		$("#time").html(timecount)
@@ -197,8 +200,9 @@ $(function() {
 		complete = correct = false
 		allcount = helpcount = rightcount = words_index = timecount = timeresultM = timeresultS = 0
 		time = timer = count = null
+		upload = false
 		timeresult = "获取失败"
-		
+
 		//====================
 		
 		unit_xml = "/xml/words_" + units + ".xml"

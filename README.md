@@ -1,6 +1,17 @@
 # Note
 如需要使用html 请自行将`*.md`文件重命名为`*.htm`或`*.html`文件 并删除文件开头三行 谢谢！
 
+`1.2.5` 版本加入了用户系统
+
+请在各个 `*.md` 文件中配置你的 `LeanCloud` 信息 如果你使用例如 `Jekyll` `Hexo` 的静态博客系统 请在站点配置文件中设置：
+```yaml /_config.yml
+# LeanCloud
+mwordLC: 
+  appId: # AppID
+  appKey: # AppKey
+  sURL: #ServerUrl
+```
+
 根目录下的`favicon.ico`用于有道发音接口调用时凑数 因为它每调用一次就会找一找`favicon.ico`到哪儿去了 然后网页就告诉我404
 ![404](https://github.com/xfqwdsj/Images/raw/master/image_202003011357_404.png)
 

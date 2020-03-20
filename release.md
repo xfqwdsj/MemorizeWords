@@ -5,7 +5,23 @@ title: 背单词
 <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
 <link rel="stylesheet" type="text/css" href="/css/component.css" />
 <script type="text/javascript" src="/jquery.js"></script>
-<script type="text/javascript" src="/js/release.js"></script>
+<script type="text/javascript">
+AV.init({
+	appId: "{{ site.mwordLC.appId }}",
+	appKey: "{{ site.mwordLC.appKey }}",
+	serverURLs: "{{ site.mwordLC.sURL }}"
+})
+var currentUser = AV.User.current()
+$(function() {
+	if(currentUser) {
+		$("#user").html("<a href='/mword/mword-user.html'>" + currentUser._serverData.username + "</a>")
+	}
+	else {
+		$("#user").html("请<a href='/mword/mword-login.html'>登录</a> 或<a href=''>刷新</a> 否则本次默写数据无效 ")
+	}
+})
+</script>
+<script type="text/javascript" src="/js/debug.js"></script>
 <style type="text/css">
 	.bton {
 		padding:0.6rem 0.9rem;
@@ -24,6 +40,18 @@ title: 背单词
 		text-decoration: none;
 		background-color: rgba(0,0,0,0.2);
 		border-color: rgba(0,0,0,0.3);
+	}
+	@media (prefers-color-scheme: dark) {
+		.bton, .darkBton {
+			color: ;
+			background-color: rgba(50,50,50,50.08);
+			border-color: rgba(255,255,255,0.2);
+		}
+		.bton:hover, .darkBton:hover {
+			color: rgba(255,255,255,0.4);
+			text-decoration: none;
+			background-color: rgba(0,0,0,0.2);
+		}
 	}
 	.play {
 		background: url('/images/youdao-img.png') no-repeat;
@@ -44,6 +72,7 @@ title: 背单词
 		border-top: none; 
 		border-left: none;
 		border-right: none;
+		background-color: rgba(0, 0, 0, 0);
 	}
 	.myInput:focus {
 		border-bottom: 3px solid #30FF30; 
@@ -56,6 +85,7 @@ title: 背单词
 		border-left: none;
 		border-right: none;
 		border-bottom: 3px solid #FF0000; 
+		background-color: rgba(0, 0, 0, 0);
 	}
 	.select {
 		outline: none;
@@ -64,6 +94,7 @@ title: 背单词
 		border-left: none;
 		border-right: none;
 		border-bottom: 2px solid #FF7070; 
+		background-color: rgba(0, 0, 0, 0);
 	}
 	input::-webkit-outer-spin-button,
 	input::-webkit-inner-spin-button {
@@ -74,6 +105,7 @@ title: 背单词
 	}
 </style>
 <div style="text-align: center; padding:2rem 1rem;">
+	<p id="user"></p>
 	<div>
 		<select class="select" id="unit" style="margin-bottom: 2px">
 			<option value="7b_u1">Unit 1</option>
