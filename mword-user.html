@@ -1,0 +1,29 @@
+---
+title: 您已登录 小番茄我的世界 - MemorizeWords
+comments: false
+---
+
+<script type="text/javascript" src="/jquery.js"></script>
+<script type="text/javascript">
+var currentUser = MW.User.current()
+
+$(function() {
+	if(!currentUser) {
+		window.location = "/mword/mword-login.html"
+	} else {
+		$("#username").html("用户名 " + currentUser.get("username"))
+		$("#nickname").html("昵称 " + currentUser.get("nickname"))
+		$("#email").html("邮箱 " + currentUser.get("email"))
+		if(currentUser.get("mobilePhoneNumber"))
+			$("#mobilePhoneNumber").html("手机号 " + currentUser.get("mobilePhoneNumber"))
+		else
+			$("#mobilePhoneNumber").html("手机号 " + currentUser.get("mobilePhoneNumber") + ' <a href="https://wpa.qq.com/msgrd?v=3&uin=2996681473&config=qq&menu=yes">添加（暂时只为特别用户手动添加手机号）</a>')
+	}
+})
+
+</script>
+<p id="username"></p>
+<p id="nickname"></p>
+<p id="email"></p>
+<p id="mobilePhoneNumber"></p>
+<p><a href="javascript:MW.User.logOut(); window.location = '/mword/mword-login.html'">注销</a> <a href="/mword/mword.html">背单词</a></p>

@@ -1,0 +1,184 @@
+---
+title: 我的成果2.0
+---
+
+<script type="text/javascript" src="/jquery.js"></script>
+<script type="text/javascript">
+$(function() {
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)")
+		var r = window.location.search.substr(1).match(reg)
+		if(r != null) {
+			return decodeURI(r[2])
+		}
+	}
+	function getMSSTime(s) {
+		var timeresultM = 0, timeresultS = 0
+		while(s >= 60) {
+			s = s - 60
+			timeresultM++
+		}
+		if(s < 10) {
+			timeresultS = "0" + s
+		} else if(s >= 10) {
+			timeresultS = s
+		} 
+		return timeresultM + ":" + timeresultS
+	}
+	function descend(x, y){
+		return y[1] - x[1]
+	}
+	if(getQueryString("id") != null) {
+		$(".result").css("visibility", "visible")
+		var id = getQueryString("id")
+		var query = new MW.Query("MwordsResult")
+		var user = new MW.Query("_User")
+		var oobject = new Array()
+		var ouser = new Array()
+		var unit
+		var nuidx = new Array()
+		query.descending("diyhelp")
+		query.find().then(function(object) {
+			$(object).each(function(index) {
+				if(object[index].id == id) {
+					unit = object[index].get("unit")
+				}
+			})
+			$(object).each(function(index) {
+				if(object[index].get("unit") != unit) {
+					nuidx.push(index)
+				}
+			})
+			var i = 0
+			$(nuidx).each(function(index) {
+				object.splice(nuidx[index] - i, 1)
+				i++
+			})
+			i = null
+			$(object).each(function(index) {
+				if(ouser.indexOf(object[index].get("userid")) < 0) {
+					ouser.push(object[index].get("userid"))
+				}
+			})
+			user.find().then(function(users) {
+				$(users).each(function(index) {
+					$(object).each(function(idx) {
+						if(object[idx].id == id && object[idx].get("userid") == users[index].id) {
+							var diyhelp = object[idx].get("diyhelp")
+							if(diyhelp == 0) {
+								diyhelp = "全部"
+							}
+							$("#result").html("我是" + users[index].get("nickname") 
+											+ " 我的唯一用户名是" + users[index].get("username")
+											+ " 我在" + object[idx].createdAt.toLocaleString()
+											+ " 默写了" + unit + "的单词" 
+											+ " 用时" + getMSSTime(object[idx].get("timer"))
+											+ " 使用提示字数" + diyhelp
+											+ " 提示了" + object[idx].get("help") + "次")
+							$("#result2").html("数据更新于" + object[idx].updatedAt.toLocaleString())
+							$("#result3").html("妥善保管数据ID " + object[idx].id)
+						}
+					})
+				})
+				$(ouser).each(function(index) {
+					$(users).each(function(IDX) {
+						if(users[IDX].id == ouser[index]) {
+							var speed = new Array()
+							var username = users[index].get("username")
+							$(object).each(function(idx) {
+								if(object[idx].get("userid") == users[index].id) {
+									speed.push(object[idx].get("speed"))
+								}
+							})
+							speed.sort()
+							speed.reverse()
+							speed = speed.slice(0, 1)
+							oobject.push(new Array(username, speed))
+							return true
+						}
+					})
+				})
+				oobject.sort(descend)
+				$(oobject).each(function(idx) {
+					oobject = oobject.slice(0, 5)
+					if (idx == oobject.length - 1) {
+						$("#leader").html($("#leader").html() + oobject[idx][0] + " " + oobject[idx][1] + "个单词/秒")
+					} else {
+						$("#leader").html($("#leader").html() + oobject[idx][0] + " " + oobject[idx][1] + "个单词/秒<br />")
+					}
+				})
+			}, function(e) {
+				switch(e.code) {
+					case 429: 
+						alert("请求超限 请过一会再试")
+						break
+					default: 
+						alert("错误：" + e)
+				}
+			})
+		}, function(e) {
+			switch(e.code) {
+				case 429: 
+					alert("请求超限 请过一会再试")
+					break
+				default: 
+					alert("错误：" + e)
+			}
+		})
+	} else {
+		$(".search").css("visibility", "visible")
+		$(".myInput").off("keydown").on("keydown",
+		function(e) {
+			if(e.keyCode == 13) {
+				window.location = "?id=" + $(".myInput").val()
+			}
+		})
+	}
+})
+</script>
+
+<style type="text/css">
+	.card {
+		text-align: center;
+		border-radius:5px;
+		box-shadow: 1px 1px 5px #888888;
+		max-height: 200px;
+		overflow: auto;
+	}
+	.result {
+		visibility: hidden;
+	}
+	.search {
+		text-align: center;
+		visibility: hidden;
+	}
+	.myInput {
+		margin-bottom: 5px;
+		transition: 0.5s;
+		outline: none;
+		text-align: center; 
+		border-bottom: 2px solid #EEEEEE; 
+		border-top: none; 
+		border-left: none;
+		border-right: none;
+		background-color: rgba(0, 0, 0, 0);
+		width: 100%;
+	}
+	.myInput:focus {
+		border-bottom: 3px solid #FF7070; 
+	}
+</style>
+<div class="result">
+	<div class="card">
+		<p>排行榜（提示数为先决条件）</p>
+		<span id="leader"></span>
+	</div>
+	<p id="note"></p>
+	<p id="result"></p>
+	<p id="result2"></p>
+	<p id="result3"></p>
+	<a href="/mword/#%E4%BC%A0%E9%80%81%E9%97%A8">我也试一试！</a>
+</div>
+<div class="search">
+	<input class="myInput" placeholder="数据ID">
+</div>
