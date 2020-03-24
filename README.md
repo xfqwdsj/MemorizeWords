@@ -1,3 +1,6 @@
+# Docs
+[Docs(Chinese)](https://mwords.github.io/)
+
 # Note
 使用前请先删除文件开头三行 谢谢！
 
