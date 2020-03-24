@@ -1,16 +1,21 @@
 # Note
-如需要使用html 请自行将`*.md`文件重命名为`*.htm`或`*.html`文件 并删除文件开头三行 谢谢！
+使用前请先删除文件开头三行 谢谢！
 
 `1.2.5` 版本加入了用户系统
 
-请在各个 `*.md` 文件中配置你的 `LeanCloud` 信息 如果你使用例如 `Jekyll` `Hexo` 的静态博客系统 请在站点配置文件中设置：
-```yaml /_config.yml
-# LeanCloud
-mwordLC: 
-  appId: # AppID
-  appKey: # AppKey
-  sURL: #ServerUrl
+请在根目录各个 `*.html` 文件开头配置你的 `LeanCloud` 信息 示例：
+```html
+<script type="text/javascript" src="/av-min.js"></script>
+<script type="text/javascript">
+AV.init({
+	appId: /* 你的appID */,
+	appKey: /* 你的appKEY */,
+	serverURLs: /* 你的serverURL */
+})
+var MW = AV
+</script>
 ```
+如果有模板文件 使用模板文件更好
 
 根目录下的`favicon.ico`用于有道发音接口调用时凑数 因为它每调用一次就会找一找`favicon.ico`到哪儿去了 然后网页就告诉我404
 ![404](https://github.com/xfqwdsj/Images/raw/master/image_202003011357_404.png)
@@ -22,16 +27,6 @@ mwordLC:
 [github.io](https://xfqwdsj.github.io/mword/)
 # QQ
 2996681473
-# The difference of release version and debug version
-
-||release|debug|
-|:-:|:-:|:-:|
-|发布时间|更晚|更早|
-|稳定性|经过debug版本测试 更稳定|可能不太稳定|
-|功能|更旧|更新|
-|界面|更新界面时可能与debug不同 版本号显示不同|/|
-|建议|钻进未更改的漏洞或利用未修复的BUG来作弊|体验新功能 有时候也可以体验新BUG|
-
 # English version
 
 |[Google Translate](https://translate.google.com)|[Google Translate for China](https://translate.google.cn)|[Baidu Translate](https://fanyi.baidu.com)|[Youdao](https://youdao.com)|[Chrome](https://www.google.com/chrome/)|[Chrome for China](https://www.google.cn/chrome/)|
