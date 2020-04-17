@@ -19,6 +19,7 @@ $(function() {
 			user.setPassword($("#password").val())
 			user.setEmail($("#email").val())
 			user.signUp().then(function (user) {
+				alert("注册成功 检查邮箱")
 				MW.User.logOut()
 				window.location = "/mword/mword-login.html"
 			}, function (error) {
@@ -86,7 +87,9 @@ $(function() {
 <p>已有账号？<a href="/mword/mword-login.html">登录</a></p>
 <style type="text/css">
 	.myInput {
-		margin-bottom: 5px;
+		height: 33px; 
+		width: 100%; 
+		font-size: 20px;
 		transition: 0.5s;
 		outline: none;
 		text-align: center; 
@@ -95,13 +98,14 @@ $(function() {
 		border-left: none;
 		border-right: none;
 		background-color: rgba(0, 0, 0, 0);
-		width: 100%;
 	}
 	.myInput:focus {
-		border-bottom: 3px solid #FF7070; 
+		border-bottom: 3px solid #30FF30; 
 	}
-	.myInput-wrong {
-		margin-bottom: 5px;
+	.input-wrong {
+		height: 33px;
+		width: 100%; 
+		font-size: 20px;
 		transition: 0.5s;
 		outline: none;
 		text-align: center; 
@@ -110,7 +114,6 @@ $(function() {
 		border-right: none;
 		border-bottom: 3px solid #FF0000; 
 		background-color: rgba(0, 0, 0, 0);
-		width: 100%;
 	}
 	.bton {
 		padding:0.6rem 0.9rem;

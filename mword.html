@@ -12,10 +12,10 @@ comments: false
 var currentUser = MW.User.current()
 $(function() {
 	if(currentUser) {
-		$("#user").html("您已登录：<a href='/mword/mword-user.html'>" + currentUser.get("username") + "</a>")
+		$("#用户信息").html("您已登录：<a href='/mword/mword-user.html'>" + currentUser.get("username") + "</a>")
 	}
 	else {
-		$("#user").html("请<a href='/mword/mword-login.html'>登录</a> 或<a href=''>刷新</a> 否则本次默写数据无效")
+		$("#用户信息").html("请<a href='/mword/mword-login.html'>登录</a> 或<a href=''>刷新</a> 否则本次默写数据无效")
 	}
 })
 </script>
@@ -63,6 +63,9 @@ $(function() {
 		background-position: -90px 3px; 
 	}
 	.myInput {
+		height: 33px; 
+		width: 100%; 
+		font-size: 20px;
 		transition: 0.5s;
 		outline: none;
 		text-align: center; 
@@ -76,6 +79,9 @@ $(function() {
 		border-bottom: 3px solid #30FF30; 
 	}
 	.input-wrong {
+		height: 33px;
+		width: 100%; 
+		font-size: 20px;
 		transition: 0.5s;
 		outline: none;
 		text-align: center; 
@@ -103,9 +109,9 @@ $(function() {
 	}
 </style>
 <div style="text-align: center; padding:2rem 1rem;">
-	<p id="user"></p>
+	<p id="用户信息"></p>
 	<div>
-		<select class="select" id="unit" style="margin-bottom: 2px">
+		<select class="select" id="单元" style="margin-bottom: 2px">
 			<option value="7b_u1">Unit 1</option>
 			<option value="7b_u2">Unit 2</option>
 			<option value="7b_u3">Unit 3</option>
@@ -118,25 +124,25 @@ $(function() {
 		</select>
 	</div>
 	<div>
-		<span id="hint">Loading...</span>
+		<span id="顶部">Loading...</span>
 	</div>
 	<div>
-		<input id="play" class="play" type="button" />
+		<input id="播放" class="play" type="button" />
 	</div>
 	<div style="margin-bottom: 15px;">
-		<span id="notice" style="float: left">就快好了！ ヾ(≧▽≦*)o</span>
-		<span id="result" style="float: right">0/0</span>
+		<span id="文左上" style="float: left">就快好了！ ヾ(≧▽≦*)o</span>
+		<span id="文右上" style="float: right">0/0</span>
 	</div>
 	<div>
-		<input class="myInput" type="text" id="text" autocomplete="off" style="height: 33px; width: 100%; font-size: 20px;" />
+		<input class="myInput" type="text" id="输入" autocomplete="off" />
 	</div>
 	<div style="margin-top: 5px;">
-		<button type="button" id="help" style="margin-right: 5px;" class="bton">Please</button>
-		<button type="button" id="again" style="margin-left: 5px;" class="bton">wait...</button>
+		<button type="button" id="按钮左" style="margin-right: 5px;" class="bton">Please</button>
+		<button type="button" id="按钮右" style="margin-left: 5px;" class="bton">wait...</button>
 	</div>
 	<div style="margin-bottom: 15px;">
-		<span id="time" style="float: left">0</span>
-		<span id="version" style="float: right;">version 0</span>
+		<span id="文左下" style="float: left">0</span>
+		<span id="文右下" style="float: right;">version 0</span>
 	</div>
 </div>
 <hr />
@@ -149,7 +155,7 @@ $(function() {
 	</div>
 	<div style="margin-top: 20px;">
 		<span class="input input--akira">
-			<input class="input__field input__field--akira" type="number" id="input-helpdiy" οnkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" />
+			<input class="input__field input__field--akira" type="number" id="选项自定义提示" οnkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" />
 			<label class="input__label input__label--akira" for="input-helpdiy">
 				<span class="input__label-content input__label-content--akira">提示字数（留空为全部提示）</span>
 			</label>

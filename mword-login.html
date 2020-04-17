@@ -59,10 +59,12 @@ $(function() {
 	<input type="password" id="password" placeholder="密码" class="myInput"><br />
 	<button type="button" id="submit" class="bton">登录</button><br />
 </div>
-<p>没有账号？<a href="/mword/mword-signin.html">注册</a></p>
+<p>没有账号？<a href="/mword/mword-signup.html">注册</a></p>
 <style type="text/css">
 	.myInput {
-		margin-bottom: 5px;
+		height: 33px; 
+		width: 100%; 
+		font-size: 20px;
 		transition: 0.5s;
 		outline: none;
 		text-align: center; 
@@ -71,13 +73,14 @@ $(function() {
 		border-left: none;
 		border-right: none;
 		background-color: rgba(0, 0, 0, 0);
-		width: 100%;
 	}
 	.myInput:focus {
-		border-bottom: 3px solid #FF7070; 
+		border-bottom: 3px solid #30FF30; 
 	}
-	.myInput-wrong {
-		margin-bottom: 5px;
+	.input-wrong {
+		height: 33px;
+		width: 100%; 
+		font-size: 20px;
 		transition: 0.5s;
 		outline: none;
 		text-align: center; 
@@ -86,7 +89,6 @@ $(function() {
 		border-right: none;
 		border-bottom: 3px solid #FF0000; 
 		background-color: rgba(0, 0, 0, 0);
-		width: 100%;
 	}
 	.bton {
 		padding:0.6rem 0.9rem;
