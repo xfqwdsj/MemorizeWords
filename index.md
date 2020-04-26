@@ -17,9 +17,11 @@ $(function() {
 	<p id="user"></p>
 </div>
 
-**即将开放查询功能 敬请期待！**
+**全局排行榜已开放！即将开放全局查询！**
 ## 更新日志
 ```
+**版本 1.2.8 更新内容
+- 优化注册、登录页面
 **版本 1.2.7.5 更新内容
 - 删除默写错误后的提示
 **版本 1.2.7.2 更新内容
@@ -34,4 +36,4 @@ $(function() {
 - 完全使用用户验证制
 ```
 ## 传送门
-[开始背单词](mword.html) | [根据ID查询结果](result.html) | [GitHub项目主页（可下载源代码）](https://github.com/xfqwdsj/MemorizeWords)
+[开始背单词](mword.html) | [根据ID查询结果](result.html) | [全局排行榜](lb.html) | [GitHub项目主页（可下载源代码）](https://github.com/xfqwdsj/MemorizeWords)
