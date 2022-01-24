@@ -1,3 +1,6 @@
+# Attention!
+This repo was achieved and its replacement is [EasyTest](https://gitHub.com/xfqwdsj/EasyTest-Android).
+
 # Docs
 [Docs(Chinese)](https://mwords.github.io/)
 
